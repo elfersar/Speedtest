@@ -8,6 +8,7 @@ A tool to measure your internet connection.<br />
 
 # On my List
 - Add a calculator to find out how long you need to down- or upload your specific amount of data.<br />
+- Create an executable.
 <br />
 
 # Example screenshots
