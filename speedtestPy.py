@@ -3,6 +3,7 @@ SPEEDTEST Application
 Author: elfersar
 """
 
+
 # Imports
 import _thread as td
 import tkinter as tk
@@ -11,7 +12,7 @@ from tkinter import messagebox
 import sys, speedtest, datetime, time, platform
 
 # Global Var
-global version, me
+global root, version, me
 version = "1.0"
 me = "https://github.com/elfersar"
 
@@ -32,12 +33,12 @@ class speedapp:
 		self.text.config(state="disabled")
 		self.text.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
-		# Hinweis
-		self.label_1 = tk.Label(frame, text="Press start to test your connection...", width=35)
-		self.label_1.grid(row=2,column=0, padx=5, pady=5)
+		# Calculate Button
+		self.btn_calc = tk.Button(frame, text="Calculator", width=20, command=self.calculator)
+		self.btn_calc.grid(row=2,column=0, padx=5, pady=5)
 
 		# Start Button
-		self.btn_start = tk.Button(frame, text="Start", width=10, command=self.speedtestPy_Thread)
+		self.btn_start = tk.Button(frame, text="Start", width=10, command=lambda: td.start_new_thread(self.speedtestPy, ()))
 		self.btn_start.grid(row=3, stick="s", padx=5, pady=5)
 
 		# About Button
@@ -48,13 +49,10 @@ class speedapp:
 		self.btn_exit = tk.Button(frame, text="Exit",  width=10, command=frame.quit)
 		self.btn_exit.grid(row=3, sticky="e", padx=5, pady=5)
 
-		# Progress Bar
-		#self.progressBar = ttk.Progressbar(frame, length=345, mode="indeterminate", orient="horizontal")
-
 		# Status Bar
 		self.info = tk.StringVar()
 		self.info.set(" Version: {}".format(version))
-		self.statusbar = tk.Label(frame, textvariable=self.info, bd=1, relief="sunken", anchor="w", width=38)
+		self.statusbar = tk.Label(frame, textvariable=self.info, bd=1, relief="sunken", anchor="w", width=43)
 		self.statusbar.grid(row=5)
 
 		# Say hello world
@@ -74,7 +72,7 @@ class speedapp:
 
 	# Display welcome message
 	def welcometext(self):
-		msg = "Welcome to my little script.\n\nThis programm will show your\ncurrent state of your\ninternet connection." 
+		msg = "Welcome to my little script.\n\nThis programm will show your\ncurrent state of your\ninternet connection.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPress start to test your connection" 
 
 		self.text.config(state="normal")
 		self.text.insert(tk.INSERT, msg)
@@ -109,10 +107,6 @@ class speedapp:
 		# Call showProcess() in new Thread
 		td.start_new_thread(self.showProcess, ())
 
-		# Progress Bar start
-		#self.progressBar.grid(row=4)
-		#self.progressBar.start()
-
 		self.writetext("SPEEDTEST | Version: {}".format(version))
 		time.sleep(1)
 		self.writetext("\n1. Connecting to Server ...")
@@ -143,22 +137,18 @@ class speedapp:
 		time_upload = time.strftime("%S s", time.gmtime(end_upload - start_upload))
 
 		# Converting results from str to int an convert bit/s in mbits/s
-		mbit_download = int(ergebnisse["download"]/1000000)
-		mbit_upload = int(ergebnisse["upload"]/1000000)
+		self.mbit_download = int(ergebnisse["download"]/1000000)
+		self.mbit_upload = int(ergebnisse["upload"]/1000000)
 		ping_in_ms = int(ergebnisse["ping"])
 
 		# Break the loop in showProcess()
 		self.w = False
 
-		# Progress Bar stop
-		#self.progressBar.grid_forget()
-		#self.progressBar.stop()
-
 		# Display results
 		self.writetext("\n---RESULTS---\n")
 		time.sleep(1.5)
-		self.writetext("\nDOWNLOAD: {} Mbit/s".format(mbit_download))
-		self.writetext("UPLOAD: {} Mbits/s".format(mbit_upload))
+		self.writetext("\nDOWNLOAD: {} Mbit/s".format(self.mbit_download))
+		self.writetext("UPLOAD: {} Mbits/s".format(self.mbit_upload))
 		self.writetext("PING: {} ms\n".format(ping_in_ms))
 		self.writetext("Date: {} ".format(datetime.datetime.now().strftime("%H:%M:%S Uhr - %d.%m.%Y \n")))
 
@@ -175,21 +165,58 @@ class speedapp:
 		# Enable START Button
 		self.btn_start.config(state="normal")
 
-	# Run the speedtest in new Thread
-	def speedtestPy_Thread(self):
-		td.start_new_thread(self.speedtestPy, ())
+	def calculator(self):
+		# Calculator window
+		self.root_calc = tk.Tk()
+		self.root_calc.resizable(width=False, height=False)
+		self.root_calc.title("Calculator")
+		# System check
+		s = str(platform.system())
+		if s == "Windows":
+			self.root_calc.iconbitmap("images/speedicon.ico")
+
+		# Place Widgets in Calculator Window
+		frame_calc = tk.Frame(self.root_calc)
+		frame_calc.grid()
+
+		label_calc = tk.Label(frame_calc, text="Connection Calculator \n WORK IN PROGRESS", width=30)
+		label_calc.grid(row=0, padx=5, pady=5)
+
+		btn_exitCalc = tk.Button(frame_calc, text="Exit", width=30, command=self.exit_Calc)
+		btn_exitCalc.grid(row=1, padx=5, pady=5)
+
+		# Window position
+		windowWidth = self.root_calc.winfo_reqwidth()
+		windowHeight = self.root_calc.winfo_reqheight()
+		positionRight = int(self.root_calc.winfo_screenwidth()/2 - windowWidth/3.1)
+		positionDown = int(self.root_calc.winfo_screenheight()/2 - windowHeight)
+		self.root_calc.geometry("+{}+{}".format(positionRight, positionDown))
+
+		# Calculate the Data
+
+
+		# Start calculator Window
+		self.root_calc.mainloop()
+
+	def exit_Calc(self):
+		self.root_calc.destroy()
+		root.focus_force()
+
+
+
 		
 
 
 if __name__ == '__main__':
 	# Mainwindow
 	root = tk.Tk()
+
 	root.resizable(width=False, height=False)
 	root.title("Speedtest")
 
 	# System check
 	s = str(platform.system())
-	if s=="Windows":
+	if s == "Windows":
 		root.iconbitmap("images/speedicon.ico")
 
 	# Window position
@@ -201,7 +228,7 @@ if __name__ == '__main__':
 
 
 	# Run Application
-	sui = speedapp(root)
+	speedapp(root)
 	root.mainloop()
 
 
