@@ -7,7 +7,7 @@ A tool to measure your internet connection.<br />
 - execute speedtestPy.py
 
 # On my List
-- Add a calculator to find out how long you need to down- or upload an amount of data.<br />
+- Add a calculator to find out how long you need to down- or upload your specific amount of data.<br />
 <br />
 
 # Example screenshots
