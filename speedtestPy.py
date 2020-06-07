@@ -193,8 +193,8 @@ if __name__ == '__main__':
 
 	# System check
 	s = str(platform.system())
-	if s=="win32":
-		root.iconbitmap("speedicon.ico")
+	if s=="Windows":
+		root.iconbitmap("images/speedicon.ico")
 
 	# Window position
 	windowWidth = root.winfo_reqwidth()
