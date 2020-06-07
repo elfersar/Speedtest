@@ -1,12 +1,8 @@
 """ 
 SPEEDTEST Application
 Author: elfersar
-
-Next goal: 
-	- export results to csv
-	- read last results from csv
-	- logging file
 """
+
 # Imports
 import _thread as td
 import tkinter as tk
