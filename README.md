@@ -1,4 +1,4 @@
-# Speedtest
+# Speedtest version 1.1
 A tool to measure your internet connection.<br />
 - If you have ideas for more features or you have issues please let me know!
 
@@ -7,10 +7,18 @@ A tool to measure your internet connection.<br />
 - execute speedtestPy.py
 
 # On my List
-- Add a calculator to find out how long you need to down- or upload your specific amount of data.<br />
 - Create an executable.
 <br />
 
 # Example screenshots
 ![Example Image](https://github.com/elfersar/Speedtest/blob/master/images/example0.png)
 ![Example Image](https://github.com/elfersar/Speedtest/blob/master/images/example1.png)
+![Example Image](https://github.com/elfersar/Speedtest/blob/master/images/example2.png)
+<br />
+
+# Update history
+- Version 1.0<br />
+  - published Speedtest<br /><br />
+- Version 1.1<br />
+  - added the Calculator<br />
+  - fixed bugs<br />
