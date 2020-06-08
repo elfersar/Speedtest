@@ -7,7 +7,8 @@ A tool to measure your internet connection.<br />
 - execute speedtestPy.py
 
 # On my List
-- Create an executable.
+- Create an executable
+- Translations for the UI
 <br />
 
 # Example screenshots
