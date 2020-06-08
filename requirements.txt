@@ -1,1 +1,7 @@
 speedtest-cli
+_thread
+tkinter
+sys
+datetime
+time
+platform
