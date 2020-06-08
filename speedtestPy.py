@@ -13,18 +13,20 @@ import sys, speedtest, datetime, time, platform
 
 # Global Var
 global root, version, me
-version = "1.0"
+version = "1.1"
 me = "https://github.com/elfersar"
 
 
 class speedapp:
+	# Is the prgram working (w), is there a result to work with in the calculator (t)
 	w = True
-	# Define Window
+	r = False
+	# Define farme in root window
 	def __init__(self, window):
 		frame = tk.Frame(window)
 		frame.grid()
 
-		# Überschrift
+		# Header
 		self.label_1 = tk.Label(frame, text="Speedtest by elfersar", width=35)
 		self.label_1.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
 
@@ -34,7 +36,7 @@ class speedapp:
 		self.text.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
 		# Calculate Button
-		self.btn_calc = tk.Button(frame, text="Calculator", width=20, command=self.calculator)
+		self.btn_calc = tk.Button(frame, text="Calculator", width=20, command=self.show_calculator)
 		self.btn_calc.grid(row=2,column=0, padx=5, pady=5)
 
 		# Start Button
@@ -72,7 +74,7 @@ class speedapp:
 
 	# Display welcome message
 	def welcometext(self):
-		msg = "Welcome to my little script.\n\nThis programm will show your\ncurrent state of your\ninternet connection.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPress start to test your connection" 
+		msg = "Welcome to my little script.\n\nThis programm will show your\ncurrent state of your\ninternet connection.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPress start to test the connection!" 
 
 		self.text.config(state="normal")
 		self.text.insert(tk.INSERT, msg)
@@ -100,9 +102,10 @@ class speedapp:
 		# Start timestamp
 		start_total = time.time()
 
-		# Clear text Box an disable START Button
+		# Clear text Box an disable START / CALC Button
 		self.cleartext()
 		self.btn_start.config(state="disable")
+		self.btn_calc.config(state="disable")
 
 		# Call showProcess() in new Thread
 		td.start_new_thread(self.showProcess, ())
@@ -141,8 +144,9 @@ class speedapp:
 		self.mbit_upload = int(ergebnisse["upload"]/1000000)
 		ping_in_ms = int(ergebnisse["ping"])
 
-		# Break the loop in showProcess()
+		# Break the loop in showProcess() and tell that we have tested
 		self.w = False
+		self.r = True
 
 		# Display results
 		self.writetext("\n---RESULTS---\n")
@@ -162,29 +166,19 @@ class speedapp:
 		self.writetext("Finished Upload: {} ".format(time_upload))
 		self.writetext("Finished Test in: {} ".format(time_total))
 
-		# Enable START Button
+		# Enable START / CALC Button
 		self.btn_start.config(state="normal")
+		self.btn_calc.config(state="normal")
 
-	def calculator(self):
+	def show_calculator(self):
 		# Calculator window
 		self.root_calc = tk.Tk()
 		self.root_calc.resizable(width=False, height=False)
-		self.root_calc.title("Calculator")
-		# System check
+		self.root_calc.title("Connection Calculator")
+		# System check for icon
 		s = str(platform.system())
 		if s == "Windows":
 			self.root_calc.iconbitmap("images/speedicon.ico")
-
-		# Place Widgets in Calculator Window
-		frame_calc = tk.Frame(self.root_calc)
-		frame_calc.grid()
-
-		label_calc = tk.Label(frame_calc, text="Connection Calculator \n WORK IN PROGRESS", width=30)
-		label_calc.grid(row=0, padx=5, pady=5)
-
-		btn_exitCalc = tk.Button(frame_calc, text="Exit", width=30, command=self.exit_Calc)
-		btn_exitCalc.grid(row=1, padx=5, pady=5)
-
 		# Window position
 		windowWidth = self.root_calc.winfo_reqwidth()
 		windowHeight = self.root_calc.winfo_reqheight()
@@ -192,19 +186,99 @@ class speedapp:
 		positionDown = int(self.root_calc.winfo_screenheight()/2 - windowHeight)
 		self.root_calc.geometry("+{}+{}".format(positionRight, positionDown))
 
-		# Calculate the Data
+
+		# Place Widgets in Calculator Frame
+		frame_calc = tk.Frame(self.root_calc)
+		frame_calc.grid()
+
+		# Topic
+		label_calc = tk.Label(frame_calc, text="Connection Calculator \n WORK IN PROGRESS", width=30)
+		label_calc.grid(row=0, padx=5, pady=5)
+
+		# Exit Button
+		btn_exitCalc = tk.Button(frame_calc, text="Exit", width=53, command=lambda: self.root_calc.destroy())
+		btn_exitCalc.grid(row=10, padx=2, pady=3)
+
+		# Is there a result to work with?
+		if self.r == False:
+			# Show Info
+			info = "Please run the test first."
+			label_testresults = tk.Label(frame_calc, text=info)
+			label_testresults.grid(row=1, padx=5, pady=5)
+
+		else:
+			# Show the Results ones more
+			testresults = "Download: {} Mbits, Upload: {} Mbits".format(self.mbit_download, self.mbit_upload)
+			label_testresults = tk.Label(frame_calc, text=testresults)
+			label_testresults.grid(row=1, padx=5, pady=5)
+
+			# Text Box
+			self.box = tk.Text(frame_calc, borderwidth=2, relief="groove", width=47, height=13)
+			self.box.config(state="disabled")
+			self.box.grid(row=2, padx=2, pady=5)
+
+			# Say the user what to do
+			label_maual = tk.Label(frame_calc, text="Enter a number in MB...")
+			label_maual.grid(row=3, padx=2, pady=2, sticky="w")
+
+			# Calculate DOWNLOAD Button
+			btn_calculate = tk.Button(frame_calc, text="Calculate -- DOWNLOAD", width=25, command= self.calc_user_download_input)
+			btn_calculate.grid(row=5, padx=5, pady=1, sticky="w")
+
+			# Calculate UPLOAD Button
+			btn_calculate = tk.Button(frame_calc, text="Calculate -- UPLOAD", width=25, command= self.calc_user_upload_input)
+			btn_calculate.grid(row=5, padx=5, pady=1, sticky="e")
+
+			# Entry form
+			self.inp_user = tk.Entry(frame_calc, bg="white", width=20)
+			self.inp_user.grid(row=4, padx=2, pady=2)
+
+			# Calculate the Data
+			self.mbps_download = (self.mbit_download / 0.8) / 10
+			self.mbps_upload = (self.mbit_upload / 0.8) / 10
+			self.gb_1_download = round(float((1000 / self.mbps_download) / 60), 2)
+			self.gb_10_download = round(float((10000 / self.mbps_download) / 60), 2)
+			self.gb_1_upload = round(float((1000 / self.mbps_upload) / 60), 2)
+			self.gb_10_upload = round(float((10000 / self.mbps_upload) / 60), 2)
+
+			# Display calculation in box
+			self.box.config(state="normal")
+			self.box.insert(tk.INSERT, "Download: {} Mbps\nUpload: {} Mbps\n\n".format(self.mbps_download, self.mbps_upload))
+			self.box.insert(tk.INSERT, "DOWNLOAD:\n1GB needs {} min, 10GB needs {} min\n\n".format(self.gb_1_download, self.gb_10_download))
+			self.box.insert(tk.INSERT, "UPLOAD:\n1GB needs {} min, 10GB needs {} min\n".format(self.gb_1_upload, self.gb_10_upload))
+			self.box.insert(tk.INSERT, "_______________________________________________\n\n")
+			self.box.config(state="disabled")
 
 
 		# Start calculator Window
 		self.root_calc.mainloop()
 
-	def exit_Calc(self):
-		self.root_calc.destroy()
-		root.focus_force()
+	# Calculate the user input DOWNLOAD
+	def calc_user_download_input(self):
+		try:
+			userMB = round(float(self.inp_user.get()), 2)
+			userCalc = round(float((userMB / self.mbps_download) / 60), 2)
+			self.box.config(state="normal")
+			self.box.insert(tk.INSERT, "You need {} min to download {} MB!\n".format(userCalc, userMB))
+			self.box.config(state="disabled")
+			self.box.yview_pickplace("end")
+		except:
+			messagebox.showinfo("Information",'Please enter a valid number!\n\nUse " . " instead of " , " ! ')
 
 
+	# Calculate the user input UPLOAD
+	def calc_user_upload_input(self):
+		try:
+			userMB = round(float(self.inp_user.get()), 2)
+			userCalc = round(float((userMB / self.mbps_upload) / 60), 2)
+			self.box.config(state="normal")
+			self.box.insert(tk.INSERT, "You need {} min to upload {} MB!\n".format(userCalc, userMB))
+			self.box.config(state="disabled")
+			self.box.yview_pickplace("end")
+		except:
+			messagebox.showinfo("Information",'Please enter a valid number!\n\nUse " . " instead of " , " ! ')
 
-		
+	
 
 
 if __name__ == '__main__':
@@ -214,7 +288,7 @@ if __name__ == '__main__':
 	root.resizable(width=False, height=False)
 	root.title("Speedtest")
 
-	# System check
+	# System check for icon
 	s = str(platform.system())
 	if s == "Windows":
 		root.iconbitmap("images/speedicon.ico")
@@ -230,7 +304,3 @@ if __name__ == '__main__':
 	# Run Application
 	speedapp(root)
 	root.mainloop()
-
-
-
-
