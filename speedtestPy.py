@@ -18,7 +18,7 @@ me = "https://github.com/elfersar"
 
 
 class speedapp:
-	# Is the prgram working (w), is there a result to work with in the calculator (t)
+	# Is the prgram working (w), is there a result to work with in the calculator (r)
 	w = True
 	r = False
 	# Define farme in root window
@@ -192,7 +192,7 @@ class speedapp:
 		frame_calc.grid()
 
 		# Topic
-		label_calc = tk.Label(frame_calc, text="Connection Calculator \n WORK IN PROGRESS", width=30)
+		label_calc = tk.Label(frame_calc, text="Connection Calculator\n", width=30)
 		label_calc.grid(row=0, padx=5, pady=5)
 
 		# Exit Button
