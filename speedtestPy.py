@@ -63,7 +63,7 @@ class speedapp:
 	# Change content in text Box
 	def writetext(self, line):
 		self.text.config(state="normal")
-		self.text.insert(tk.INSERT, line + "\n")
+		self.text.insert("end", line + "\n")
 		self.text.config(state="disabled")
 
 	# Clear the whole text
@@ -77,7 +77,7 @@ class speedapp:
 		msg = "Welcome to my little script.\n\nThis programm will show your\ncurrent state of your\ninternet connection.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPress start to test the connection!" 
 
 		self.text.config(state="normal")
-		self.text.insert(tk.INSERT, msg)
+		self.text.insert("end", msg)
 		self.text.config(state="disabled")
 
 	def msgboxAbout(self):
@@ -243,10 +243,10 @@ class speedapp:
 
 			# Display calculation in box
 			self.box.config(state="normal")
-			self.box.insert(tk.INSERT, "Download: {} Mbps\nUpload: {} Mbps\n\n".format(self.mbps_download, self.mbps_upload))
-			self.box.insert(tk.INSERT, "DOWNLOAD:\n1GB needs {} min, 10GB needs {} min\n\n".format(self.gb_1_download, self.gb_10_download))
-			self.box.insert(tk.INSERT, "UPLOAD:\n1GB needs {} min, 10GB needs {} min\n".format(self.gb_1_upload, self.gb_10_upload))
-			self.box.insert(tk.INSERT, "_______________________________________________\n\n")
+			self.box.insert("end", "Download: {} Mbps\nUpload: {} Mbps\n\n".format(self.mbps_download, self.mbps_upload))
+			self.box.insert("end", "DOWNLOAD:\n1GB needs {} min, 10GB needs {} min\n\n".format(self.gb_1_download, self.gb_10_download))
+			self.box.insert("end", "UPLOAD:\n1GB needs {} min, 10GB needs {} min\n".format(self.gb_1_upload, self.gb_10_upload))
+			self.box.insert("end", "_______________________________________________\n\n")
 			self.box.config(state="disabled")
 
 
@@ -259,7 +259,7 @@ class speedapp:
 			userMB = round(float(self.inp_user.get()), 2)
 			userCalc = round(float((userMB / self.mbps_download) / 60), 2)
 			self.box.config(state="normal")
-			self.box.insert(tk.INSERT, "You need {} min to download {} MB!\n".format(userCalc, userMB))
+			self.box.insert("end", "You need {} min to download {} MB!\n".format(userCalc, userMB))
 			self.box.config(state="disabled")
 			self.box.yview_pickplace("end")
 		except:
@@ -272,7 +272,7 @@ class speedapp:
 			userMB = round(float(self.inp_user.get()), 2)
 			userCalc = round(float((userMB / self.mbps_upload) / 60), 2)
 			self.box.config(state="normal")
-			self.box.insert(tk.INSERT, "You need {} min to upload {} MB!\n".format(userCalc, userMB))
+			self.box.insert("end", "You need {} min to upload {} MB!\n".format(userCalc, userMB))
 			self.box.config(state="disabled")
 			self.box.yview_pickplace("end")
 		except:
